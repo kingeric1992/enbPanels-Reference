@@ -1,0 +1,36 @@
+
+sampler   sampler0;
+Texture2D texture0;
+cbuffer global : register(b0) {
+    float2 ScreenSize;
+};
+
+
+//we are using .w as widget saturation, as a visual indicator if sth is active
+float3 Hue_to_RGB(float h) {
+    return saturate(float3(abs(h * 6.0f - 3.0f) - 1.0f,
+        2.0f - abs(h * 6.0f - 2.0f),
+        2.0f - abs(h * 6.0f - 4.0f)));
+}
+
+float3 HSL_to_RGB(float3 HSL) { 
+    return (Hue_to_RGB(HSL.x) - 0.5) * (1.0 - abs(2.0 * HSL.z - 1.0)) * HSL.y + HSL.z;
+}
+
+float4 Sat_wheel(float2 coord) : SV_Target {
+    float3 Wheel_S = { atan2(coord.x, coord.y) / 6.2831852 + 0.5, length(coord) * 0.5/0.45, 0.5 };
+    float3 h = HSL_to_RGB(Wheel_S);
+    return float4(lerp( 0.3, lerp(dot(h, 0.3333), h, 1.0), 1.0 - smoothstep(0.495, 0.505, Wheel_S.y)), 1.0 - smoothstep(0.5, 0.556, Wheel_S.y));
+}
+
+float4 Lum_wheel(float2 coord) {
+    float3 Wheel_L = { atan2(coord.x, coord.y)/6.2831852+0.5, 0.5, length(coord) * 0.5/0.45};
+    float3 h = HSL_to_RGB(Wheel_L);
+    return float4(lerp( 0.3, lerp(dot(h, 0.3333), h, 1.0), 1.0 - smoothstep(0.495, 0.505, Wheel_L.z)), 1.0 - smoothstep(0.5, 0.556, Wheel_L.z));
+}
+
+float4 ps_main(float4 pos : SV_POSITION, float4 col : COLOR0, float2 uv : TEXCOORD0) : SV_Target {
+    uv.x *= 4.0;
+    uv.y *= 2.0;
+    return Sat_wheel(uv - float2(1., 1.)) + Lum_wheel(uv - float2(3., 1.));
+}
