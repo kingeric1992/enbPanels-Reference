@@ -96,3 +96,47 @@ list of enbPanels supported function
   <dt>val</dt>
   <dd>Values retrieved. For multi component types, the additional component will be assign to respective slot in the table array.</dd>
 </dl>
+
+# The 'Plugin' module
+### macros
+<p>
+　<b><code>_PLUGIN_PATH</code></b>　　　full path to the plugin<br>
+　<b><code>_PLUGIN_NAME</code></b>　　　name of the plugin<br>
+　<b><code>_PLUGIN_DIR</code></b>　　　　plugin directory<br>
+　<b><code>_PLUGIN_VERSION</code></b>　　plugin version<br>
+  <br>
+　<b><code>_RUNTIME_PATH</code></b>　　　full path to the runtime<br>
+　<b><code>_RUNTIME_NAME</code></b> 　　name of the runtime<br>
+　<b><code>_RUNTIME_DIR</code></b>　　　runtime directory<br>
+　<b><code>_RUNTIME_VERSION</code></b>　runtime version<br>
+</p>
+
+### loadTexture2D
+```
+    tex2D loadTexture2D(string path)
+```
+　　Load a texture from path. 
+<dl>
+  <dt>path</dt>
+  <dd>Path to the texture, relative to runtime directory.</dd>
+</dl>
+
+### loadPixelShader
+```
+    tex2D loadPixelShader(string path)
+```
+　　Load a pixel shader from path. 
+<dl>
+  <dt>path</dt>
+  <dd>Path to the shader, relative to runtime directory.<br> See <b><code>Pixel Shader</code></b> for more detail.</dd>
+</dl>
+
+### loadConstBuffer
+```
+    tex2D loadConstBuffer(string path)
+```
+　　Create a constant buffer defined in pixel shader.
+<dl>
+  <dt>path</dt>
+  <dd>Path to the shader file that defines the constant buffer layout, relative to runtime directory.<br> See <b><code>Pixel Shader</code></b> for more detail.</dd>
+</dl>
