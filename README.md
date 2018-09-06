@@ -5,19 +5,19 @@ list of enbPanels supported function
 
 
 # The 'ENB' module
-### GetSDKVersion
+## GetSDKVersion
 ``` 
     number GetSDKVersion()
 ```
 　　Return version number of exported enbseries sdk.
 
-### GetVersion
+## GetVersion
 ``` 
     number GerVersion()
 ```
 　　Return version number of active enbseries dll.
 
-### GetGameIdentifier
+## GetGameIdentifier
 ``` 
     string GetGameIdentifier() 
 ```
@@ -25,19 +25,19 @@ list of enbPanels supported function
 ..* SkyrimSE: "0x10000002"
 ..* Fallout4: "0x10000006"
 
-### IsEditorActive
+## IsEditorActive
 ```
     bool IsEditorActive()
 ```
 　　Return true if enb GUI is opened.
   
-### IsEffectsWndActive
+## IsEffectsWndActive
 ```
     bool IsEffectsWndActive()
 ```
 　　Return true if enb shader effects window is opened.
 
-### GetScreenSize
+## GetScreenSize
 ```
     number ScreenX, number ScreenY = GetScreenSize()
 ```
@@ -50,7 +50,7 @@ list of enbPanels supported function
   <dd>Vertical pixel count.</dd>
 </dl>
 
-### Set###
+## Set###
 ```
     bool SetTex(        string filename, string section, string keyname, tex    val)
     bool SetBool(       string filename, string section, string keyname, bool   val)
@@ -78,7 +78,7 @@ list of enbPanels supported function
     value input has to be a table array of respective size. ie: {0.1, 1.2, -0.7} </dd>
 </dl>
 
-### GetParameter
+## GetParameter
 ```
     bool GetParameter( string filename, string section, string keyname, table  val )
 ```
@@ -98,20 +98,15 @@ list of enbPanels supported function
 </dl>
 
 # The 'Plugin' module
-### macros
+## MACROS
 <p>
-　<b><code>_PLUGIN_PATH</code></b>　　　full path to the plugin<br>
-　<b><code>_PLUGIN_NAME</code></b>　　　name of the plugin<br>
-　<b><code>_PLUGIN_DIR</code></b>　　　　plugin directory<br>
-　<b><code>_PLUGIN_VERSION</code></b>　　plugin version<br>
-  <br>
-　<b><code>_RUNTIME_PATH</code></b>　　　full path to the runtime<br>
-　<b><code>_RUNTIME_NAME</code></b> 　　name of the runtime<br>
-　<b><code>_RUNTIME_DIR</code></b>　　　runtime directory<br>
-　<b><code>_RUNTIME_VERSION</code></b>　runtime version<br>
+　<b><code>_PATH</code></b>　　　full path to the plugin<br>
+　<b><code>_NAME</code></b>　　　name of the plugin<br>
+　<b><code>_DIR</code></b>　　　　plugin directory<br>
+　<b><code>_VERSION</code></b>　　plugin version<br>
 </p>
 
-### loadTexture2D
+## loadTexture2D
 ```
     tex2D loadTexture2D(string path)
 ```
@@ -121,7 +116,7 @@ list of enbPanels supported function
   <dd>Path to the texture, relative to runtime directory.</dd>
 </dl>
 
-### loadPixelShader
+## loadPixelShader
 ```
     tex2D loadPixelShader(string path)
 ```
@@ -131,7 +126,7 @@ list of enbPanels supported function
   <dd>Path to the shader, relative to runtime directory.<br> See <b><code>Pixel Shader</code></b> for more detail.</dd>
 </dl>
 
-### loadConstBuffer
+## loadConstBuffer
 ```
     tex2D loadConstBuffer(string path)
 ```
@@ -140,3 +135,66 @@ list of enbPanels supported function
   <dt>path</dt>
   <dd>Path to the shader file that defines the constant buffer layout, relative to runtime directory.<br> See <b><code>Pixel Shader</code></b> for more detail.</dd>
 </dl>
+
+# The 'Runtime' module
+## MACROS
+<p>
+　<b><code>_PATH</code></b>　　　full path to the runtime<br>
+　<b><code>_NAME</code></b> 　　name of the runtime<br>
+　<b><code>_DIR</code></b>　　　runtime directory<br>
+　<b><code>_VERSION</code></b>　runtime version<br>
+</p>
+
+## Set###
+```
+    SetFloat( string addr, number val_float)
+    SetFloat( string addr, table  tbl_float)
+    
+    SetBool(  string addr, bool   val_bool)
+    SetBool(  string addr, table  tbl_bool)
+    
+    SetInt(   string addr, int    val_int)
+    SetInt(   string addr, table  tbl_int)
+    
+    SetAOB(   string addr, string val_aob)
+    SetAOB(   string addr, table  tbl_aob)
+```
+　　Set value to runtime offset address.
+<dl>
+  <dt>addr</dt>
+  <dd>String representation of the offset address that will be overwrite by the function. ie: <b>"0x02F6284C"</b> </dd>
+  <dt>val_float</dt>
+  <dd>Number to overwrite the offset address.</dd>
+  <dt>val_bool</dt>
+  <dd>Boolean to overwrite the offset address.</dd>
+  <dt>val_int</dt>
+  <dd>Integer to overwrite the offset address.</dd>
+  <dt>val_aob</dt>
+  <dd>String representation of the byte to overwrite the offset address. id: <b>"C0"</b></dd>
+  <dt>tbl_###</dt>
+  <dd>Table array input of respective type.</dd>
+</dl>
+
+## Get###
+```
+    number GetFloat( string addr)
+    table  GetFloat( string addr, int len)
+    
+    bool  GetBool(  string addr)
+    table GetBool(  string addr, int len)
+    
+    int   GetInt(   string addr)
+    table GetInt(   string addr, int len)
+    
+    string GetAOB(  string addr)
+    table  GetAOB(  string addr, int len)
+```
+　　Retreive value from runtime offset address.
+<dl>
+  <dt>addr</dt>
+  <dd>String representation of the offset address that the function will retrieve its value from. ie: <b>"0x02F6284C"</b> </dd>
+  <dt>len</dt>
+  <dd>Number of elements to retrieve.</dd>
+</dl>
+
+# The 'ImGui' module
