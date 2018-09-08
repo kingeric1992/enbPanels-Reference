@@ -1,3 +1,6 @@
+# About enbPanels
+　　enbPanels is a enbseries plugin that comes with a Lua script VM (LuaJIT) that allows user to program their own custom UI that access ENB parameters and more.
+
 # enbPanels-Reference
 list of enbPanels supported function
 
@@ -227,3 +230,30 @@ function onENBCallback_PostLoad()
 # 'ImGui' module
 
 # Pixel Shader 
+
+## basic layout:
+```hlsl
+// predef objects
+sampler   pointSampler : register(s0);
+sampler   linearSampler : register(s1);
+
+cbuffer global : register(b0) {
+    float2 ScreenSize; // Width, Height
+}
+
+// user objects
+Texture2D myTex : register(t0);
+//... up to t15
+
+// LoadConstBuffer function will only look for register "b1".
+// user can set the values of it from script through "Update()" method under const buffer object. 
+cbuffer user : register(b1) {
+    float param0;
+    //...
+}
+
+// pixel shader, with fixed function name "ps_main" and input layout.
+floa4 ps_main(float4 pos : SV_POSITION, float4 col : COLOR0, float2 uv : TEXCOORD0) : SV_Target {
+    return 0.5;
+}
+```
