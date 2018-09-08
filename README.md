@@ -230,6 +230,7 @@ function onENBCallback_PostLoad()
 # 'ImGui' module
 
 # Pixel Shader 
+　　Using pixel shaders in ImGui widgets allows user to draw complex items directly.
 
 ## basic layout:
 ```hlsl
