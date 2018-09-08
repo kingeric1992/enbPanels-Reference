@@ -1,24 +1,51 @@
 # enbPanels-Reference
 list of enbPanels supported function
 
-# The basic layout
-
-
-# The 'ENB' module
+# Callbacks
+```lua
+function onDestroy()
+```
+　　Invoked when the script is reloaded or on game exit.
+```lua
+function onENBCallback_BeginFrame()
+```
+　　Invoked when the frame just drawn.
+```lua
+function onENBCallback_EndFrame()
+```
+　　Invoked when runtime is about to draw the frame.
+```lua
+function onENBCallback_PreReset()
+```
+　　Invoked when the frame object is about to be destroy. (alt-tab from fullscreen or exit)
+```lua
+function onENBCallback_PostReset()
+```
+　　Invoked when the frame object is recovered. (alt-tab from fullscreen or app launched)
+```lua
+function onENBCallback_PreSave()
+```
+　　Invoked when enb save button is pressed, but before enb write to config.
+```lua
+function onENBCallback_PostLoad()
+```
+　　Invoked when enb load button is pressed, and after enb read the config.
+  
+# 'ENB' module
 ## GetSDKVersion
-``` 
+``` lua
     number GetSDKVersion()
 ```
 　　Return version number of exported enbseries sdk.
 
 ## GetVersion
-``` 
+``` lua
     number GerVersion()
 ```
 　　Return version number of active enbseries dll.
 
 ## GetGameIdentifier
-``` 
+``` lua
     string GetGameIdentifier() 
 ```
 　　Return unique GameID of the runtime.
@@ -26,19 +53,19 @@ list of enbPanels supported function
 ..* Fallout4: "0x10000006"
 
 ## IsEditorActive
-```
+```lua
     bool IsEditorActive()
 ```
 　　Return true if enb GUI is opened.
   
 ## IsEffectsWndActive
-```
+```lua
     bool IsEffectsWndActive()
 ```
 　　Return true if enb shader effects window is opened.
 
 ## GetScreenSize
-```
+```lua
     number ScreenX, number ScreenY = GetScreenSize()
 ```
 　　Return the screen dimension.
@@ -51,7 +78,7 @@ list of enbPanels supported function
 </dl>
 
 ## Set###
-```
+```lua
     bool SetTex(        string filename, string section, string keyname, tex    val)
     bool SetBool(       string filename, string section, string keyname, bool   val)
     bool SetInt(        string filename, string section, string keyname, int    val)
@@ -79,7 +106,7 @@ list of enbPanels supported function
 </dl>
 
 ## GetParameter
-```
+```lua
     bool GetParameter( string filename, string section, string keyname, table  val )
 ```
 　　Return true if succeeded.
@@ -97,7 +124,7 @@ list of enbPanels supported function
   <dd>Values retrieved. For multi component types, the additional component will be assign to respective slot in the table array.</dd>
 </dl>
 
-# The 'Plugin' module
+# 'Plugin' module
 ## MACROS
 <p>
 　<b><code>_PATH</code></b>　　　full path to the plugin<br>
@@ -107,7 +134,7 @@ list of enbPanels supported function
 </p>
 
 ## loadTexture2D
-```
+```lua
     tex2D loadTexture2D(string path)
 ```
 　　Load a texture from path. 
@@ -117,7 +144,7 @@ list of enbPanels supported function
 </dl>
 
 ## loadPixelShader
-```
+```lua
     tex2D loadPixelShader(string path)
 ```
 　　Load a pixel shader from path. 
@@ -127,7 +154,7 @@ list of enbPanels supported function
 </dl>
 
 ## loadConstBuffer
-```
+```lua
     tex2D loadConstBuffer(string path)
 ```
 　　Create a constant buffer defined in pixel shader.
@@ -136,7 +163,7 @@ list of enbPanels supported function
   <dd>Path to the shader file that defines the constant buffer layout, relative to runtime directory.<br> See <b><code>Pixel Shader</code></b> for more detail.</dd>
 </dl>
 
-# The 'Runtime' module
+# 'Runtime' module
 ## MACROS
 <p>
 　<b><code>_PATH</code></b>　　　full path to the runtime<br>
@@ -146,7 +173,7 @@ list of enbPanels supported function
 </p>
 
 ## Set###
-```
+```lua
     SetFloat( string addr, number val_float)
     SetFloat( string addr, table  tbl_float)
     
@@ -176,7 +203,7 @@ list of enbPanels supported function
 </dl>
 
 ## Get###
-```
+```lua
     number GetFloat( string addr)
     table  GetFloat( string addr, int len)
     
@@ -197,4 +224,6 @@ list of enbPanels supported function
   <dd>Number of elements to retrieve.</dd>
 </dl>
 
-# The 'ImGui' module
+# 'ImGui' module
+
+# Pixel Shader 
