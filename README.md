@@ -177,52 +177,84 @@ function onENBCallback_PostLoad()
 
 ## Set###
 ```lua
-    SetFloat( string addr, number val_float)
-    SetFloat( string addr, table  tbl_float)
+    SetOffsetFloat( string rel_addr, number val_float)
+    SetOffsetFloat( string rel_addr, table  tbl_float)
+    SetFloat(       string abs_addr, number val_float)
+    SetFloat(       string abs_addr, table  tbl_float)
     
-    SetBool(  string addr, bool   val_bool)
-    SetBool(  string addr, table  tbl_bool)
+    SetOffsetBool(  string rel_addr, bool   val_bool)
+    SetOffsetBool(  string rel_addr, table  tbl_bool)
+    SetBool(        string abs_addr, bool   val_bool)
+    SetBool(        string abs_addr, table  tbl_bool)
     
-    SetInt(   string addr, int    val_int)
-    SetInt(   string addr, table  tbl_int)
+    SetOffsetInt(   string rel_addr, int    val_int)
+    SetOffsetInt(   string rel_addr, table  tbl_int)
+    SetInt(         string abs_addr, int    val_int)
+    SetInt(         string abs_addr, table  tbl_int)
     
-    SetAOB(   string addr, string val_aob)
-    SetAOB(   string addr, table  tbl_aob)
+    SetOffsetAOB(   string rel_addr, string val_aob)
+    SetOffsetAOB(   string rel_addr, table  tbl_aob)
+    SetAOB(         string abs_addr, string val_aob)
+    SetAOB(         string abs_addr, table  tbl_aob)
+    
+    SetOffsetPtr(   string rel_addr, string val_ptr)
+    SetOffsetPtr(   string rel_addr, table  tbl_ptr)
+    SetPtr(         string abs_addr, string val_ptr)
+    SetPtr(         string abs_addr, table  tbl_ptr)
 ```
 　　Set value to runtime offset address.
 <dl>
-  <dt>addr</dt>
-  <dd>String representation of the offset address that will be overwrite by the function. ie: <b>"0x02F6284C"</b> </dd>
+  <dt>rel_addr</dt>
+  <dd>String representation of the offset address that will be written by the function. ie: <b>"0x02F6284C"</b> </dd>
+  <dt>abs_addr</dt>
+  <dd>String representation of the absolute address that will be written by the function. ie: <b>"0x02F6284C"</b> </dd>
   <dt>val_float</dt>
-  <dd>Number to overwrite the offset address.</dd>
+  <dd>Number to write to the address.</dd>
   <dt>val_bool</dt>
-  <dd>Boolean to overwrite the offset address.</dd>
+  <dd>Boolean to write to the address.</dd>
   <dt>val_int</dt>
-  <dd>Integer to overwrite the offset address.</dd>
+  <dd>Integer to write to the address.</dd>
   <dt>val_aob</dt>
-  <dd>String representation of the byte to overwrite the offset address. id: <b>"C0"</b></dd>
+  <dd>String representation of a byte to write to the address. ie: <b>"0xC0"</b></dd>
+  <dt>val_ptr</dt>
+  <dd>String representation of a pointer(8 bytes) to write to the address. ie: <b>"0x0015477AC"</b></dd>
   <dt>tbl_###</dt>
   <dd>Table array input of respective type.</dd>
 </dl>
 
 ## Get###
 ```lua
-    number GetFloat( string addr)
-    table  GetFloat( string addr, int len)
+    number GetOffsetFloat( string rel_addr)
+    table  GetOffsetFloat( string rel_addr, int len)
+    number GetFloat(       string abs_addr)
+    table  GetFloat(       string abs_addr, int len)
     
-    bool  GetBool(  string addr)
-    table GetBool(  string addr, int len)
+    bool   GetOffsetBool(  string rel_addr)
+    table  GetOffsetBool(  string rel_addr, int len)
+    bool   GetBool(        string abs_addr)
+    table  GetBool(        string abs_addr, int len)
     
-    int   GetInt(   string addr)
-    table GetInt(   string addr, int len)
+    int    GetOffsetInt(   string rel_addr)
+    table  GetOffsetInt(   string rel_addr, int len)
+    int    GetInt(         string abs_addr)
+    table  GetInt(         string abs_addr, int len)
     
-    string GetAOB(  string addr)
-    table  GetAOB(  string addr, int len)
+    string GetOffsetAOB(   string rel_addr)
+    table  GetOffsetAOB(   string rel_addr, int len)
+    string GetAOB(         string abs_addr)
+    table  GetAOB(         string abs_addr, int len)
+    
+    string GetOffsetPtr(   string rel_addr)
+    table  GetOffsetPtr(   string rel_addr, int len)
+    string GetPtr(         string abs_addr)
+    table  GetPtr(         string abs_addr, int len)
 ```
 　　Retreive value from runtime offset address.
 <dl>
-  <dt>addr</dt>
+  <dt>rel_addr</dt>
   <dd>String representation of the offset address that the function will retrieve its value from. ie: <b>"0x02F6284C"</b> </dd>
+  <dt>abs_addr</dt>
+  <dd>String representation of the absolute address that the function will retrieve its value from. ie: <b>"0x02F6284C"</b> </dd>
   <dt>len</dt>
   <dd>Number of elements to retrieve.</dd>
 </dl>
