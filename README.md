@@ -136,35 +136,216 @@ function onENBCallback_PostLoad()
 　<b><code>_VERSION</code></b>　　plugin version<br>
 </p>
 
-## loadTexture2D
+## createTexture2D
 ```lua
-    tex2D loadTexture2D(string path)
+    tex2D createTexture2D(string path)
+    tex2D createTexture2D(string name)
+    tex2D createTexture2D(int x, int y, format fmt)
 ```
-　　Load a texture from path. 
+　　Load a texture from path, by global name, or create a read/write texture by size and format. 
 <dl>
   <dt>path</dt>
   <dd>Path to the texture, relative to runtime directory.</dd>
+  <dt>name</dt>
+  <dd>Name of a predefined global tex resource. ie. TEX_FRAMEBUFFER</dd>
+  <dt>x</dt>
+  <dd>width of newly created texture</dd>
+  <dt>y</dt>
+  <dd>height of newly created texture</dd>
+  <dt>fmt</dt>
+  <dd>format of newly created texture. See <b><code>DXGI_FORMAT</code><b> for supported format</dd>
 </dl>
 
-## loadPixelShader
+## createPixelShader
 ```lua
-    tex2D loadPixelShader(string path)
+    shader createPixelShader(string name)
+    shader createPixelShader(string path, string entryPoint)
 ```
-　　Load a pixel shader from path. 
+　　Load a pixel shader from path and entry point, or by global name.
 <dl>
   <dt>path</dt>
   <dd>Path to the shader, relative to runtime directory.<br> See <b><code>Pixel Shader</code></b> for more detail.</dd>
+  <dt>entryPoint</dt>
+  <dd>Program entry point for the shader obj.</dd>
+  <dt>name</dt>
+  <dd>Name of a predefined global shader resource. ie. PS_LOD</dd>
+</dl>
+  Constant Buffer is shared between shader programes that created from the same file.
+
+## createRenderState
+```lua
+    rState createRenderState(opt shader ps)
+    rState createRenderState(table tex, opt shader ps)
+```
+　　Create a render state object from graphic resources.
+<dl>
+  <dt>ps</dt>
+  <dd>pixel shader assigned to the render state</dd>
+  <dt>tex</dt>
+  <dd>table of tex2D objects assigned to the render state. support up to 16 tex2Ds</dd>
 </dl>
 
-## loadConstBuffer
+## getConfig
 ```lua
-    tex2D loadConstBuffer(string path)
+    config getConfig()
+    config getConfig(string path)
 ```
-　　Create a constant buffer defined in pixel shader.
+    Load or create new config file at path.
 <dl>
   <dt>path</dt>
-  <dd>Path to the shader file that defines the constant buffer layout, relative to runtime directory.<br> See <b><code>Pixel Shader</code></b> for more detail.</dd>
-</dl>
+  <dd>Absolute path to the config file, or path relative to game directory.</dd>
+</dl>    
+    When called without arguments, returns master config "enbseries/enbPanels.ini".
+    
+# tex2D
+　　texture object for either ENB or ImGui RenderState.
+## Methods###
+```lua
+    Active(); -- forced lua VM not to delete the obj in current scope.
+    Update(); -- update the texture content if it support write.
+```  
+example usage:
+```
+local ENB   = require "ENB"
+local ImGui = require "ImGui"
+local Plugin = require "Plugin"
+
+-- create a rw 1x64 R8_UNORM texture
+local intTex = Plugin.createTexture2D( 1, 64, DXGI_FORMAT["DXGI_FORMAT_R8_UNORM"])
+
+-- assign intTex to ENB
+ENB.SetTex("ENBEFFECTPOSTPASS.FX", "dynamicTexture", intTex)
+   
+function onENBCallback_EndFrame()
+    intTex:Active() -- keeps the object alive.
+    
+    ImGui.Begin("demoWnd")
+    if( ImGui.SliderFloat("gradient", wLevel, 0, 1)) then 
+        for i=1, 64 do intMem[i] = math.min(1.0, ((i - 1)/63.0) / wLevel[1]) end
+        intTex:Update(intMem); -- cpu updates intTex 
+    end
+    ImGui.End()
+end
+```
+## Supported Formats ###
+```lua
+4-components:
+  DXGI_FORMAT_R32G32B32A32_FLOAT
+  DXGI_FORMAT_R32G32B32A32_UINT
+  DXGI_FORMAT_R32G32B32A32_SINT
+  DXGI_FORMAT_R16G16B16A16_FLOAT
+  DXGI_FORMAT_R16G16B16A16_UNORM
+  DXGI_FORMAT_R16G16B16A16_UINT
+  DXGI_FORMAT_R16G16B16A16_SNORM
+  DXGI_FORMAT_R16G16B16A16_SINT
+  DXGI_FORMAT_R10G10B10A2_UNORM
+  DXGI_FORMAT_R10G10B10A2_UINT
+  DXGI_FORMAT_R8G8B8A8_UNORM
+  DXGI_FORMAT_R8G8B8A8_UNORM_SRGB
+  DXGI_FORMAT_R8G8B8A8_UINT
+  DXGI_FORMAT_R8G8B8A8_SNORM
+  DXGI_FORMAT_R8G8B8A8_SINT
+3-components:
+  DXGI_FORMAT_R32G32B32_FLOAT
+  DXGI_FORMAT_R32G32B32_UINT
+  DXGI_FORMAT_R32G32B32_SINT
+  DXGI_FORMAT_R11G11B10_FLOAT
+2-components:
+  DXGI_FORMAT_R32G32_FLOAT
+  DXGI_FORMAT_R32G32_UINT
+  DXGI_FORMAT_R32G32_SINT
+  DXGI_FORMAT_R16G16_FLOAT
+  DXGI_FORMAT_R16G16_UNORM
+  DXGI_FORMAT_R16G16_UINT
+  DXGI_FORMAT_R16G16_SNORM
+  DXGI_FORMAT_R16G16_SINT
+  DXGI_FORMAT_R8G8_UNORM
+  DXGI_FORMAT_R8G8_UINT
+  DXGI_FORMAT_R8G8_SNORM
+  DXGI_FORMAT_R8G8_SINT
+1-component:
+  DXGI_FORMAT_R32_FLOAT
+  DXGI_FORMAT_R32_UINT
+  DXGI_FORMAT_R32_SINT
+  DXGI_FORMAT_R16_FLOAT
+  DXGI_FORMAT_R16_UNORM
+  DXGI_FORMAT_R16_UINT
+  DXGI_FORMAT_R16_SNORM
+  DXGI_FORMAT_R16_SINT
+  DXGI_FORMAT_R8_UNORM
+  DXGI_FORMAT_R8_UINT
+  DXGI_FORMAT_R8_SNORM
+  DXGI_FORMAT_R8_SINT
+```
+
+# shader
+　　shader object for ImGui RenderState.
+## Methods###
+```lua
+    Active(); -- forced lua VM not to delete the obj in current scope.
+    Update(); -- update the cBuffer bound to the shader object.
+```  
+
+## basic layout of shader file:
+```hlsl
+// predef objects
+sampler   pointSampler : register(s0);
+sampler   linearSampler : register(s1);
+
+cbuffer global : register(b0) {
+    float2 ScreenSize; // Width, Height
+}
+
+//this can be updated by shaderObj:Update();
+cbuffer user : register(b1) {
+    float userVal0;
+    float3 userVal1;
+}
+
+//tex2D objects assigned to renderState object
+Texture2D myTex : register(t0);
+//... up to t15
+
+// LoadConstBuffer function will only look for register "b1".
+// user can set the values of it from script through "Update()" method under const buffer object. 
+cbuffer user : register(b1) {
+    float param0;
+    //...
+}
+
+// pixel shader, with entry point "ps_main" and input layout.
+floa4 ps_main(float4 pos : SV_POSITION, float4 col : COLOR0, float2 uv : TEXCOORD0) : SV_Target {
+    return 0.5;
+}
+```
+
+# renderState
+  renderState object for ImGui widgets.
+## Methods ###
+```lua
+  Active(); -- forced lua VM not to delete the obj in current scope.
+```
+## Members ###
+```lua
+  tex -- table of tex2D objects
+  ps -- shader object
+```
+
+# config
+  config object for saving or loading presets.
+## Methods###
+```lua
+    Read(); -- read from config file.
+    Write(); -- write to config file.
+    GetFloat(string sec, string key); -- retreive float by section and key
+    GetInt(string sec, string key); -- retreive integer by section and key
+    GetString(string sec, string key); -- retreive string by section and key
+    GetBool(string sec, string key); -- retreive boolean by section and key
+    
+    local str_val = ConfigObj.Section.Key; -- retreive string value by section and key
+    ConfigObj.Section.Key = str_val; -- assign string value to specified section and key
+    ConfigObj.Section = {}; -- assign table of key-value pair to section.
+```
 
 # 'Runtime' module
 ## MACROS
@@ -261,32 +442,4 @@ function onENBCallback_PostLoad()
 
 # 'ImGui' module
 
-# Pixel Shader 
-　　Using pixel shaders in ImGui widgets allows user to draw complex items directly.
 
-## basic layout:
-```hlsl
-// predef objects
-sampler   pointSampler : register(s0);
-sampler   linearSampler : register(s1);
-
-cbuffer global : register(b0) {
-    float2 ScreenSize; // Width, Height
-}
-
-// user objects
-Texture2D myTex : register(t0);
-//... up to t15
-
-// LoadConstBuffer function will only look for register "b1".
-// user can set the values of it from script through "Update()" method under const buffer object. 
-cbuffer user : register(b1) {
-    float param0;
-    //...
-}
-
-// pixel shader, with fixed function name "ps_main" and input layout.
-floa4 ps_main(float4 pos : SV_POSITION, float4 col : COLOR0, float2 uv : TEXCOORD0) : SV_Target {
-    return 0.5;
-}
-```
